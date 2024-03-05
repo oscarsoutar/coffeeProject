@@ -1,0 +1,63 @@
+.about_page {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-top: 180px;
+}
+
+.about_section {
+    padding-left: 64px;
+    width: 95%;
+}
+
+.about_img_grid {
+    float: left;
+    position: relative;
+    padding-top: 64px;
+    padding-left: 64px;
+}
+
+.about_img {
+    width: 600px;
+}
+
+.about_h1 {
+    font-size: var(--big-font-size);
+    padding-bottom: 16px;
+}
+
+.about_h2 {
+    padding-bottom: 16px;
+}
+
+.about_details {
+    padding-bottom: 16px;
+}
+
+.contact_us {
+    margin-left: 95px;
+    margin-top: 40px;
+    float: left;
+}
+
+.about_buttons {
+    float: right;
+    margin: 0;
+    margin-top: 36px;
+    padding-right: 64px;
+}
+
+.insta_button, .facebook_button, .gmaps_button {
+    margin-right: 36px;
+}
+
+.insta_img {
+    width: 50px;
+}
+
+.facebook_img {
+    width: 50px;
+}
+
+.gmaps_img {
+    width: 50px;
+}
