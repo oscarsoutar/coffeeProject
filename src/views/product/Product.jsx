@@ -5,7 +5,7 @@ import './Product.css';
 export default function ProductPage() {
   const [menus, setMenus] = useState([]);
 
-  const fetcProduct = async () => {
+  const fetchProduct = async () => {
     const response = await axios.get(
       'https://bubble-tea-cafe-api-production.up.railway.app/api/menu'
     );
@@ -14,7 +14,7 @@ export default function ProductPage() {
   };
 
   useEffect(() => {
-    fetcProduct();
+    fetchProduct();
   }, []);
   return (
     <div className='grid'>
@@ -24,7 +24,7 @@ export default function ProductPage() {
           <div className='text'>
             <h3>{menu.name}</h3>
             <p>
-              {menu.category}, {menu.price} Bath
+              {menu.price} Baht
             </p>
             <button>Add Product to Cart</button>
           </div>
