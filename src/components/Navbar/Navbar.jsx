@@ -26,7 +26,7 @@ export default function Navbar() {
             </li>
             <div className='login'>
               {userProfile ? (
-                <a onClick={() => localStorage.clear()}href = '/'>Logout</a>
+                <a onClick={() => localStorage.clear()} href = '/'>Logout</a>
                 ) : (
                   <p></p>
                   )}
