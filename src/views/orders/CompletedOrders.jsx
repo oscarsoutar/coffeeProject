@@ -22,7 +22,7 @@ export default function Orders() {
       setOrders(orders_data.data);
     };
 
-    const fetchUsernames = async () => {
+    const fetchUsername = async () => {
         const response = await axios.get(
             'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/users', {
                 headers: {
@@ -32,7 +32,7 @@ export default function Orders() {
         );
         const users_data = response.data;
         setUsers(users_data.data);
-    };
+    }
 
     const fetchMenus = async () => {
         const response = await axios.get(
@@ -58,33 +58,16 @@ export default function Orders() {
         setToppings(toppings_data.data);
     };
 
-
-    const completeOrder = async (order) => {
-        await axios({
-            method: 'put',
-            url: 'https://bubble-tea-cafe-api-production.up.railway.app/api/order/' + order.Id,
-            data: {
-                user_id: order.user_id,
-                menu_id: order.menu_id,
-                topping: order.topping,
-                quantity: order.quantity, 
-                total: order.total,
-                status: 'completed'},
-                headers: {Authorization: token},
-            });
-        window.location.reload()
-    };
-
     useEffect(() => {
         fetchOrders();
-        fetchUsernames();
+        fetchUsername();
         fetchMenus();
         fetchToppings();
     }, []);
 
     return (
         <div>
-            <h1>New Orders</h1>
+            <h1>Completed Orders</h1>
             <div className='statusChangeBttn'>
                 <a href='/orders'>New</a>
                 <a href='/completed'>Completed</a>
@@ -101,9 +84,9 @@ export default function Orders() {
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id='pendingTable'>
+                    <tbody id='completeTable'>
                         {orders.map(order => {
-                            if (order.status == 'pending') {
+                            if (order.status == 'completed') {
                                 if (order.user_id == '') {
                                     return (
                                         <></>
@@ -125,14 +108,16 @@ export default function Orders() {
                                                     )
                                                 }
                                             })}
+                                            {toppings.map(topping => {
+                                                if (order.topping == topping.Id) {
+                                                    return (
+                                                        <td key={topping.Id}></td>
+                                                    )
+                                                }
+                                            })}
                                             <td>{order.quantity}</td>
                                             <td>{order.total}</td>
                                             <td>{order.status}</td>
-                                            {order.status == 'pending' ? (
-                                                <td><button onClick={() => completeOrder(order)}>Complete</button></td>
-                                            ) : (
-                                                <></>
-                                            )}
                                         </tr>
                                     )
                                 

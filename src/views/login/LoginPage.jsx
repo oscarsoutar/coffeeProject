@@ -9,8 +9,7 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
+      await axios.post(
           'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/login',
           {
             email: email,
@@ -18,7 +17,7 @@ export default function LoginPage() {
           }
         )
         .then((response) => {
-          window.localStorage.setItem('token', response.data.token);
+          localStorage.setItem('token', response.data.token);
           window.location.href = '/';
         });
     } catch (error) {

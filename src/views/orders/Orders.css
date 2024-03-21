@@ -1,0 +1,10 @@
+.statusChangeBttn {
+    width: 200px;
+    margin-left: 100px;
+    display: inline;
+}
+
+.statusChangeBttn a {
+    margin-left: 20px;
+    color: white;
+}
