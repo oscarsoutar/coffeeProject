@@ -58,6 +58,20 @@ export default function Orders() {
         setToppings(toppings_data.data);
     };
 
+    function toppingnamegrab(order) {
+        var toppingname = []
+        var topName
+        toppingname = order.topping.map(function(value) {
+            topName = toppings.map(topping => {
+                if (value == topping.Id) {
+                    return topping.name
+                }
+            })
+            return topName
+        })
+        return <td className='toppingColumn'><ul className='toppinglist'>{toppingname}</ul></td>
+    }
+
 
     const completeOrder = async (order) => {
         await axios({
@@ -83,7 +97,7 @@ export default function Orders() {
     }, []);
 
     return (
-        <div>
+        <div className='ordersPage'>
             <h1>New Orders</h1>
             <div className='statusChangeBttn'>
                 <a href='/orders'>New</a>
@@ -110,26 +124,27 @@ export default function Orders() {
                                     )
                                 } else 
                                     return (
-                                        <tr key={order.Id}>
+                                        <tr className='trows' key={order.Id}>
                                             {users.map(user => {
                                                 if (order.user_id == user.Id) {
                                                     return (
-                                                        <td key={user.Id}>{user.username}</td>
+                                                        <td className='userColumn' key={user.Id}>{user.username}</td>
                                                     )
                                                 }
                                             })}
                                             {menus.map(menu => {
                                                 if (order.menu_id == menu.Id) {
                                                     return (
-                                                        <td key={menu.Id}>{menu.name}</td>
+                                                        <td className='menuColumn' key={menu.Id}>{menu.name}</td>
                                                     )
                                                 }
                                             })}
-                                            <td>{order.quantity}</td>
-                                            <td>{order.total}</td>
-                                            <td>{order.status}</td>
+                                            {toppingnamegrab(order)}
+                                            <td className='quantityColumn'>{order.quantity}</td>
+                                            <td className='totalColumn'>{order.total}</td>
+                                            <td className='statusColumn'>{order.status}</td>
                                             {order.status == 'pending' ? (
-                                                <td><button onClick={() => completeOrder(order)}>Complete</button></td>
+                                                <td className='completeButton'><button onClick={() => completeOrder(order)}>Complete</button></td>
                                             ) : (
                                                 <></>
                                             )}
