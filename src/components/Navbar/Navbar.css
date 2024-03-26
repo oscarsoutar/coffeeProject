@@ -19,6 +19,15 @@
     text-decoration: none;
 }
 
+.cart a {
+    float: right;
+    display: block;
+    color: pink;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
 .login a {
     float: right;
     display: block;

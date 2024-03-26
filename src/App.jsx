@@ -7,6 +7,7 @@ import ProfilePage from './views/profile/ProfilePage';
 import LoginPage from './views/login/LoginPage';
 import About from './views/about/About';
 import OrdersPage from './views/orders/Orders';
+import CartPage from './views/cart/Cart';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path='/login' element={<LoginPage />} />
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/orders' element={<OrdersPage />} />
+            <Route path='/cart' element={<CartPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
