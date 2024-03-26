@@ -9,13 +9,13 @@ export default function ProductPage() {
   const [selectedToppings, setSelectedToppings] = useState([]);
   const [modal, setModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [note, setNote] = useState("");
-
-
+  const [comment, setComment] = useState("");
+  const token = localStorage.getItem('token');
+  
   const toggleModal = () => {
     setModal(!modal)
     setQuantity(1);
-    setNote("");
+    setComment("");
   }
 
   const handleMenuClick = (menu) => {
@@ -25,8 +25,12 @@ export default function ProductPage() {
   }
 
   const handleQuantityChange = (event) => {
-    setQuantity(parseInt(event.target.value));
-  }
+    const newQuantity = parseInt(event.target.value);
+    if (isNaN(newQuantity)) {
+      return;
+    }
+    setQuantity(newQuantity);
+  };
 
   const handleToppingClick = (topping) => {
     if (selectedToppings.some((t) => t.Id === topping.Id)) {
@@ -35,13 +39,6 @@ export default function ProductPage() {
       setSelectedToppings([...selectedToppings, topping]);
     }
   };
-
-  const addToCart = (menu, quantity, toppings, note) => {
-    // Add the toCart logic here using the provided parameters.
-    // Make an API call to pass the data or update the state to store the data.
-    pass
-  };
-  
 
   const fetchProduct = async () => {
     const response = await axios.get(
@@ -56,6 +53,63 @@ export default function ProductPage() {
     );
     setToppings(response.data.data);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log({
+        menu_id: selectedMenu.Id,
+        quantity: quantity,
+        topping: selectedToppings,
+        comment: comment,
+      });
+  
+      const response = await axios.post(
+        'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
+        {
+          menu_id: selectedMenu.Id,
+          quantity: quantity,
+          topping: selectedToppings,
+          comment: comment,
+        }, {
+          headers: {
+          Authorization: token
+          }
+        }
+      );
+  
+      console.log(response);
+  
+      localStorage.setItem('cart', response.data);
+      window.location.href = '/';
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+    // const handleSubmit = async (e) => {
+    //   e.preventDefault();
+    //   try {
+    //     await axios.post(
+    //         'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
+    //         {
+    //           user_id: localStorage.getItem('user_id'),
+    //           menu_id: selectedMenu.Id,
+    //           quantity: quantity,
+    //           topping: selectedToppings,
+    //           comment: comment,
+    //         }
+    //       )
+    //       .then((response) => {
+    //         localStorage.setItem('cart', response.data);
+    //         window.location.href = '/';
+    //       });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
 
   useEffect(() => {
     fetchProduct();
@@ -143,15 +197,15 @@ export default function ProductPage() {
                   </p>
 
                   <p>
-                    Notes:
+                    Comment:
                   </p>
                   <input
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
                   />
 
 
-                  <button className='btn-cart' onClick={() => addToCart(selectedMenu, quantity, selectedToppings, note)}>
+                  <button className='btn-cart' onClick={handleSubmit}>
                     Add to Cart
                   </button>
 
