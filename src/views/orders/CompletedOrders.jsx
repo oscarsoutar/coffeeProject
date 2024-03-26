@@ -59,17 +59,17 @@ export default function Orders() {
     };
 
     function toppingnamegrab(order) {
-        var toppingname = []
-        var topName
-        toppingname = order.topping.map(function(value) {
-            topName = toppings.map(topping => {
+        const toppingname = []
+        order.topping.map(function(value) {
+            toppings.map(topping => {
                 if (value == topping.Id) {
-                    return topping.name
+                    toppingname.push(topping.name)
                 }
             })
-            return topName
         })
-        return <td className='toppingColumn'><ul className='toppinglist'>{toppingname}</ul></td>
+        return <td className='toppingColumn'>{toppingname + ''}</td>
+        // return <td className='toppingColumn'><ul className='toppinglist'>{toppingname}</ul></td>
+        // return <button onClick={() => console.log(toppingname)}>console</button>
     }
 
     useEffect(() => {
@@ -91,7 +91,7 @@ export default function Orders() {
                     <thead>
                         <tr>
                             <th>Username</th>
-                            <th>Menus</th>
+                            <th>Menu</th>
                             <th>Toppings</th>
                             <th>Quantity</th>
                             <th>Total</th>

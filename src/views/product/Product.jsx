@@ -4,22 +4,62 @@ import './Product.css';
 
 export default function ProductPage() {
   const [menus, setMenus] = useState([]);
+  const [toppings, setToppings] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedToppings, setSelectedToppings] = useState([]);
   const [modal, setModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [note, setNote] = useState("");
+
 
   const toggleModal = () => {
     setModal(!modal)
+    setQuantity(1);
+    setNote("");
   }
+
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+    setSelectedToppings([]);
+    toggleModal();
+  }
+
+  const handleQuantityChange = (event) => {
+    setQuantity(parseInt(event.target.value));
+  }
+
+  const handleToppingClick = (topping) => {
+    if (selectedToppings.some((t) => t.Id === topping.Id)) {
+      setSelectedToppings(selectedToppings.filter((t) => t.Id !== topping.Id));
+    } else {
+      setSelectedToppings([...selectedToppings, topping]);
+    }
+  };
+
+  const addToCart = (menu, quantity, toppings, note) => {
+    // Add the toCart logic here using the provided parameters.
+    // Make an API call to pass the data or update the state to store the data.
+    pass
+  };
+  
 
   const fetchProduct = async () => {
     const response = await axios.get(
       'https://bubble-tea-cafe-api-production.up.railway.app/api/menu'
     );
-    const menus_data = response.data;
-    setMenus(menus_data.data);
+    setMenus(response.data.data);
+  };
+
+  const fetchTopping = async () => {
+    const response = await axios.get(
+      'https://bubble-tea-cafe-api-production.up.railway.app/api/topping'
+    );
+    setToppings(response.data.data);
   };
 
   useEffect(() => {
     fetchProduct();
+    fetchTopping();
   }, []);
   return (
     <>
@@ -29,44 +69,104 @@ export default function ProductPage() {
           <img src={menu.image} alt='Sample photo' />
           <div className='text'>
             <h3>{menu.name}</h3>
-            <p>
-              {menu.price} Baht
+            <p className='price'>
+              ฿{menu.price} THB
             </p>
 
             <button 
-            className='btn-modal' 
-            onClick={toggleModal}>
+              className='btn-modal' 
+              onClick={() => handleMenuClick(menu)}>
               Add Product to Cart
             </button>
+          </div>
 
-            {modal && (
-            <div className='modal'>
-              <div className='overlay'>
+            {/* POPUP MODAL FOR ADD CART */}
+            {modal && selectedMenu && (
+            <div className='overlay'>
+              <div className='modal'>
                 <div className='modal-content'>
+
                   <h2>
-                    {menu.name}
+                    {selectedMenu.name}
                   </h2>
+
+                  <div className='modal-img'>
+                  <img 
+                  src={selectedMenu.image} 
+                  alt='Sample photo' />
+                  </div>
+
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Ut minus voluptatem laborum amet, consequatur molestiae 
-                    adipisci temporibus! Repudiandae ullam accusantium illum 
-                    soluta, quam dolorem corporis voluptate tempore architecto 
-                    est explicabo eaque nemo perferendis mollitia facilis! Natus 
-                    nostrum laudantium reprehenderit ratione ad! Eligendi neque 
-                    ea asperiores aliquid dicta corrupti sunt et.
+                    ฿{selectedMenu.price} THB
                   </p>
 
+                  {/* TOPPING SELECTION */}
+                  {toppings.length > 0 && (
+                    <div>
+                      <p>Toppings:</p>
+                      {toppings.map((topping) => (
+                        <button
+                          className='btn-topping'
+                          key={topping.Id}
+                          onClick={() => handleToppingClick(topping)}
+                        >
+                          {topping.name}
+                        </button>
+                      ))}
+
+                      {/* HOLD SELECTED TOPPING */}
+                      {selectedToppings.length > 0 && (
+                        <div>
+                          <p>Selected Toppings:</p>
+                          <ul>
+                            {selectedToppings.map((selectedTopping) => (
+                              <li key={selectedTopping.Id}>
+                                {selectedTopping.name}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <p>
+                    {/* INPUT QUANTITY */}
+                    Quantity:  
+                    <input
+                      className='quantity-input'
+                      type="number"
+                      min="1"
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                    />
+                  </p>
+
+                  <p>
+                    Notes:
+                  </p>
+                  <input
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
+
+
+                  <button className='btn-cart' onClick={() => addToCart(selectedMenu, quantity, selectedToppings, note)}>
+                    Add to Cart
+                  </button>
+
+
+
                   <button 
-                  className='close-modal' 
-                  onClick={toggleModal}>
+                    className='close-modal' 
+                    onClick={toggleModal}>
                     ClOSE
                   </button>
+
                 </div>
               </div>
             </div>
             )}
-
-          </div>
         </article>
       ))}
     </div>
