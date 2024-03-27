@@ -1,8 +1,7 @@
-import React from 'react'
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import './Cart.css'
 import { useUserProfile } from '../../layouts/BaseLayout';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function viewCart() {
     const [menus, setMenus] = useState([]);
