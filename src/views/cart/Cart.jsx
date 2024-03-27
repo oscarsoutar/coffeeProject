@@ -1,7 +1,8 @@
+import React from 'react';
+import axios from 'axios';
 import './Cart.css'
 import { useUserProfile } from '../../layouts/BaseLayout';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 export default function viewCart() {
     const [menus, setMenus] = useState([]);
@@ -181,7 +182,38 @@ export default function viewCart() {
     //     window.location.reload();
     // }
 
+    const confirmOrder = async (order) => {
+        await axios({
+            method: 'post',
+            url: 'https://bubble-tea-cafe-api-production.up.railway.app/api/order/',
+            data: {
+                user_id: order.user_id,
+                menu_id: order.menu_id,
+                topping: order.topping,
+                quantity: order.quantity, 
+                total: 200,
+                status: order.status},
+                headers: {Authorization: token},
+            });
+        
+        await axios.delete('https://bubble-tea-cafe-api-production.up.railway.app/api/auth/remove-from-cart/' + order.Id, {
+            headers: {
+                Authorization: token
+            }
+        })
 
+        window.location.reload();
+    };
+
+    const removeOrder = async (order) => {
+        await axios.delete('https://bubble-tea-cafe-api-production.up.railway.app/api/auth/remove-from-cart/' + order.Id, {
+            headers: {
+                Authorization: token
+            }
+        })
+
+        window.location.reload();
+    }
 
     function toppingnamegrab(order) {
         const toppingname = []
@@ -235,12 +267,8 @@ export default function viewCart() {
                         <td>{item.comment}</td>
                         <td>{item.status}</td>
                         <td>
-                            <button>confirm order</button>
-                            {/* <button onClick={handleItemClick(item)}>remove</button> */}
-                            {/* <button onClick={(e) => { handleItemClick(item); removeItem(e) }}>remove</button> */}
-                            {/* {() => { setSelectedItem(item); handleRemoveItem() }} */}
-                            {/* <button onClick={(e) => removeItem(e)}>remove</button> */}
-                            <button>remove</button> 
+                            <button onClick={() => confirmOrder(item)}>Confirm Order</button>
+                            <button onClick={() => removeOrder(item)}>remove</button> 
                             <button>edit</button>
                         </td>
                     </tr>
@@ -248,7 +276,7 @@ export default function viewCart() {
                 })}
                 </tbody>
             </table>
-            <button onClick={clearCart}>clear</button>
+            <button onClick={() => clearCart()}>clear</button>
         </div>
       </div>
     );
