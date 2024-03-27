@@ -161,26 +161,6 @@ export default function ViewCart() {
   const cart = userProfile?.cart;
   const token = localStorage.getItem("token");
   const [editingOrder, setEditingOrder] = useState(null);
-export default function viewCart() {
-    const [userorders, setUserOrders] = useState([]);
-    const [menus, setMenus] = useState([]);
-    const [toppings, setToppings] = useState([]);
-    const userProfile = useUserProfile();
-    const cart = userProfile?.cart;
-    const userID = localStorage.getItem('userID');
-    const token = localStorage.getItem('token');
-    
-    const fetchUserOrders = async () => {
-        const response = await axios.get(
-          'https://bubble-tea-cafe-api-production.up.railway.app/api/order/user/' + userID, {
-              headers: {
-                  Authorization: token
-              }
-          }
-        );
-        const orders_data = response.data;
-        setUserOrders(orders_data.data);
-    };
 
   const fetchMenus = async () => {
     const response = await axios.get(
@@ -312,16 +292,6 @@ const confirmOrder = async (order) => {
     
     window.location.reload();
 };
-
-    const removeOrder = async (order) => {
-        await axios.delete('https://bubble-tea-cafe-api-production.up.railway.app/api/auth/remove-from-cart/' + order.Id, {
-            headers: {
-                Authorization: token
-            }
-        })
-
-        window.location.reload();
-    }
 
     function toppingnamegrab(order) {
         const toppingname = []
