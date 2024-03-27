@@ -19,6 +19,7 @@ const Layout = () => {
         }
       );
       setUserProfile(response.data.data);
+      localStorage.setItem('userID', response.data.data.Id);
     } catch (error) {
       console.log(error);
     }
