@@ -1,35 +1,34 @@
 import './Cart.css'
-import axios from 'axios';
-import { useState , useEffect} from 'react';
 import { useUserProfile } from '../../layouts/BaseLayout';
 
 export default function viewCart() {
     const userProfile = useUserProfile();
-    const userId = userProfile?.Id;
-    const [cart, setCart] = useState([]);
-    const token = localStorage.getItem('token');
-    console.log(userId)
-    const fetchCart = async () => {
-        const response = await axios.get(
-            'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/user/' + userId
-            , {
-                headers: {
-                    Authorization: token,
-                }
-            }
-        );
-        setCart(response.data.cart);
-    };
-
+    const cart = userProfile?.cart;
     console.log(cart);
 
-    useEffect(() => {
-        fetchCart();
-    }, []);
     return (
         <div className="cart">
-            <h2>Cart</h2>
-            <p>{userId} items in your cart.</p>
-        </div>
+        <h2>Cart</h2>
+        {cart?.length > 0 && cart.map((item, index) => (
+          <div key={item.Id}>
+            <p>Menu ID: {item.menu_id}</p>
+            <p>Quantity: {item.quantity}</p>
+            {item.topping === null ? (
+              <p>Topping: None</p>
+            ) : (
+              <p>
+                {item.topping.length > 1 ? (
+                  <span>Toppings: {item.topping.join(', ')}</span>
+                ) : (
+                  <span>Topping: {item.topping[0]}</span>
+                )}
+              </p>
+            )}
+            <p>Comment: {item.comment}</p>
+            <p>Status: {item.status}</p>
+            <hr />
+          </div>
+        ))}
+      </div>
     );
 }
