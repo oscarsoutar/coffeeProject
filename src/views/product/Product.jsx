@@ -40,6 +40,9 @@ export default function ProductPage() {
     }
   };
 
+  const selectedToppingId = selectedToppings.map((topping) => topping.Id)
+
+
   const fetchProduct = async () => {
     const response = await axios.get(
       'https://bubble-tea-cafe-api-production.up.railway.app/api/menu'
@@ -62,7 +65,7 @@ export default function ProductPage() {
           data: {
               menu_id: selectedMenu.Id,
               quantity: quantity,
-              topping: selectedToppings.Id,
+              topping: selectedToppingId,
               comment: comment},
           headers: {Authorization: token}
           }
