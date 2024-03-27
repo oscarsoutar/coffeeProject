@@ -5,11 +5,25 @@ import { useUserProfile } from '../../layouts/BaseLayout';
 import { useEffect, useState } from 'react';
 
 export default function viewCart() {
+    const [userorders, setUserOrders] = useState([]);
     const [menus, setMenus] = useState([]);
     const [toppings, setToppings] = useState([]);
     const userProfile = useUserProfile();
     const cart = userProfile?.cart;
+    const userID = localStorage.getItem('userID');
     const token = localStorage.getItem('token');
+    
+    const fetchUserOrders = async () => {
+        const response = await axios.get(
+          'https://bubble-tea-cafe-api-production.up.railway.app/api/order/user/' + userID, {
+              headers: {
+                  Authorization: token
+              }
+          }
+        );
+        const orders_data = response.data;
+        setUserOrders(orders_data.data);
+    };
 
     const fetchMenus = async () => {
         const response = await axios.get(
@@ -201,7 +215,6 @@ export default function viewCart() {
                 Authorization: token
             }
         })
-
         window.location.reload();
     };
 
@@ -211,7 +224,6 @@ export default function viewCart() {
                 Authorization: token
             }
         })
-
         window.location.reload();
     }
 
@@ -224,60 +236,112 @@ export default function viewCart() {
                 }
             })
         })
-        return <td className='toppingColumn'>{toppingname + ''}</td>
+        return <td className='toppingColumn'>{toppingname.join(', ')}</td>
     }
 
-
-
-
+    function ordertoppingnamegrab(userorder) {
+        const ordertoppingname = []
+        userorder.topping.map(function(value) {
+            toppings.map(topping => {
+                if (value == topping.Id) {
+                    ordertoppingname.push(topping.name)
+                }
+            })
+        })
+        return <td className='toppingColumn'>{ordertoppingname.join(', ')}</td>
+    }
 
     useEffect(() => {
+        fetchUserOrders();
         fetchMenus();
         fetchToppings();
     }, []);
 
     return (
-        <div className="cart">
-        <h2>Cart</h2>
-        <div className='table'>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Menu</th>
-                        <th>Toppings</th>
-                        <th>Quantity</th>
-                        <th>Comment</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {cart?.length > 0 && cart.map(item => {
-                    return (
-                        <tr key={item.Id}>
-                        {menus.map(menu => {
-                            if (menu.Id == item.menu_id) {
+        <div>
+            <div className="cart">
+            <h1>Cart</h1>
+            <div className='table'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Menu</th>
+                            <th>Toppings</th>
+                            <th>Quantity</th>
+                            <th>Comment</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {cart?.length > 0 && cart.map(item => {
+                            return (
+                                <tr key={item.Id}>
+                                {menus.map(menu => {
+                                    if (menu.Id == item.menu_id) {
+                                        return (
+                                            <td className='menuColumn' key={menu.Id}>{menu.name}</td>
+                                            )
+                                        }
+                                    })}
+                                {toppingnamegrab(item)}
+                                <td>{item.quantity}</td>
+                                <td>{item.comment}</td>
+                                <td>{item.status}</td>
+                                <td>
+                                    <button onClick={() => confirmOrder(item)}>Confirm Order</button>
+                                    <button onClick={() => removeOrder(item)}>remove</button> 
+                                    <button>edit</button>
+                                </td>
+                            </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
+                    <button onClick={() => clearCart()}>clear</button>
+                </div>
+            </div>
+            <div className='order'>
+                <h1>Orders</h1>
+                <div className='Table'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Menu</th>
+                            <th>Toppings</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id='orderTable'>
+                        {userorders.map(userorder => {
+                            if (userorders.user_id == '') {
                                 return (
-                                    <td className='menuColumn' key={menu.Id}>{menu.name}</td>
+                                    <></>
+                                )
+                            } else {
+                                return (
+                                    <tr className='trows' key={userorder.Id}>
+                                    {menus.map(menu => {
+                                        if (userorder.menu_id == menu.Id) {
+                                            return (
+                                                <td className='menuColumn' key={menu.Id}>{menu.name}</td>
+                                                )
+                                            }
+                                        })}
+                                    {ordertoppingnamegrab(userorder)}
+                                    <td className='quantityColumn'>{userorder.quantity}</td>
+                                    <td className='totalColumn'>{userorder.total}</td>
+                                    <td className='statusColumn'>{userorder.status}</td>
+                                </tr>
                                 )
                             }
                         })}
-                        {toppingnamegrab(item)}
-                        <td>{item.quantity}</td>
-                        <td>{item.comment}</td>
-                        <td>{item.status}</td>
-                        <td>
-                            <button onClick={() => confirmOrder(item)}>Confirm Order</button>
-                            <button onClick={() => removeOrder(item)}>remove</button> 
-                            <button>edit</button>
-                        </td>
-                    </tr>
-                    )
-                })}
-                </tbody>
-            </table>
-            <button onClick={() => clearCart()}>clear</button>
+                    </tbody>
+                </table>
+            </div>
+            </div>
         </div>
-      </div>
     );
 }
