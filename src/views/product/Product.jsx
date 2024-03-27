@@ -42,7 +42,6 @@ export default function ProductPage() {
 
   const selectedToppingId = selectedToppings.map((topping) => topping.Id)
 
-
   const fetchProduct = async () => {
     const response = await axios.get(
       'https://bubble-tea-cafe-api-production.up.railway.app/api/menu'
@@ -72,7 +71,6 @@ export default function ProductPage() {
         )
       window.location.reload();
     };
-
 
   useEffect(() => {
     fetchProduct();
@@ -167,13 +165,10 @@ export default function ProductPage() {
                     onChange={(e) => setComment(e.target.value)}
                   />
 
-
                   <button className='btn-cart' type='submit' value='Submit'
                   onClick={(e) => handleSubmit(e)}>
-                  {/* <button className='btn-cart' onClick={handleSubmit}> */}
                     Add to Cart
                   </button>
-
 
                   <button 
                     className='close-modal' 

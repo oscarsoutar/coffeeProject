@@ -122,44 +122,7 @@ export default function Orders() {
                                                     )
                                                 }
                                             })}
-                                            {toppingnamegrab(order)
-                                            // toppingname = order.topping.map(function(value) {
-                                            //     toppings.map(topping => {
-                                            //         if (value == topping) {
-                                            //             toppingname.push(topping.name)
-                                            //         }
-                                            //     })
-                                            // })
-                                            }
-                                            {/* {order.topping.map(topping => {
-                                                var toppingnames = []
-                                                var breakcount = order.topping.length
-                                                if (breakcount = 0) {
-                                                    return (
-                                                        <td>{toppingnames}</td>
-                                                    )
-                                                } else {
-                                                    toppingnames.push(topping.name)
-                                                    breakcount =- 1
-                                                }
-                                                // var ordertoppingarr = order.topping
-                                                // var toppingIDarr = topping.Id
-                                                // for (let i = 0; i < order.topping.length; i++) {
-                                                //     for (let x = 0; x < topping.Id.length; x++) {
-                                                //         if (ordertoppingarr[i] == toppingIDarr[x]) {
-                                                //             toppingnames.push(topping.name[x])
-                                                //         }
-                                                //     }
-                                                // }
-                                                // return (
-                                                //     <td key={topping.Id}>{toppingIDarr}</td>
-                                                // )
-                                                // if (order.topping === topping.Id) {
-                                                //     return (
-                                                //         <td key={topping.Id}><li>{topping.name}</li></td>
-                                                //     )
-                                                // }
-                                            })} */}
+                                            {toppingnamegrab(order)}
                                             <td className='quantityColumn'>{order.quantity}</td>
                                             <td className='totalColumn'>{order.total}</td>
                                             <td className='statusColumn'>{order.status}</td>
