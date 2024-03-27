@@ -1,48 +1,50 @@
 import './Cart.css'
 import axios from 'axios';
 import { useState } from 'react';
+// import AddToCart from 'product';
 
 export default function AddToCart() {
-  const [quantity, setQuantity] = useState('');
-  const [topping, setTopping] = useState('');
-  const [comment, setComment] = useState('');
+  const [cart, setCart] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(
-          'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
-          {
-            quantity: quantity,
-            topping: topping,
-            comment: comment,
-          }
-        )
-        .then((response) => {
-          localStorage.setItem('cart', response.data);
-          window.location.href = '/';
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const cartItems = JSON.parse(localStorage.getItem('cart')) || []; 
+//   const [quantity, setQuantity] = useState('');
+//   const [topping, setTopping] = useState('');
+//   const [comment, setComment] = useState('');
 
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       await axios.post(
+//           'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
+//           {
+//             quantity: quantity,
+//             topping: topping,
+//             comment: comment,
+//           }
+//         )
+//         .then((response) => {
+//           localStorage.setItem('cart', response.data);
+//           window.location.href = '/';
+//         });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+//   const cartItems = JSON.parse(localStorage.getItem('cart')) || []; 
+
+const fetchCart = async () => {
+    const response = await axios.get(
+        'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/user/' + cartId//need cart id
+    );
+    const cart_data = response.data.cart;
+    setCart(cart_data.cart);
+};
+useEffect(() => {
+    fetchCart();
+  }, []);
   return (
     <div className="cart">
-      <h2>Cart</h2>
-      
-      {/* // Only attempt mapping if cartItems is not empty */}
-      {cartItems.length > 0 && 
-        cartItems.map(item => (
-          <div key={item.id}>
-            <p>{item.quantity}</p>
-            <p>{item.topping}</p>
-            <p>{item.comment}</p>  
-          </div>
-        ))
-      }
-  
+        <h2>Cart</h2>
+        <p>{cart.quantity}</p>
     </div>
   );
 //   return (

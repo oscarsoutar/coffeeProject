@@ -54,62 +54,85 @@ export default function ProductPage() {
     setToppings(response.data.data);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      console.log({
-        menu_id: selectedMenu.Id,
-        quantity: quantity,
-        topping: selectedToppings,
-        comment: comment,
-      });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     console.log({
+  //       menu_id: selectedMenu.Id,
+  //       quantity: quantity,
+  //       topping: selectedToppings,
+  //       comment: comment,
+  //     });
   
-      const response = await axios.post(
-        'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
-        {
-          menu_id: selectedMenu.Id,
-          quantity: quantity,
-          topping: selectedToppings,
-          comment: comment,
-        }, {
-          headers: {
-          Authorization: token
-          }
-        }
-      );
+  //     const response = await axios.post(
+  //       'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
+  //       {
+  //         menu_id: selectedMenu.Id,
+  //         quantity: quantity,
+  //         topping: selectedToppings,
+  //         comment: comment,
+  //       }, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}` 
+  //         }
+  //       }
+  //     );
   
-      console.log(response);
+  //     console.log(response);
   
-      localStorage.setItem('cart', response.data);
-      window.location.href = '/';
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //     localStorage.setItem('cart', response.data);
+  //     window.location.href = '/cart';
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await axios.post(
+            'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
+            {
+              user_id: localStorage.getItem('user_id'),
+              menu_id: selectedMenu.Id,
+              quantity: quantity,
+              topping: selectedToppings,
+              comment: comment},
+            {
+              headers: {
+                Authorization: token
+              }
+            }
+        )
+        .then((response) => {
+          localStorage.setCartId('cart', response.data.Id);
+          window.location.href = '/product';
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
 
 
     // const handleSubmit = async (e) => {
     //   e.preventDefault();
-    //   try {
-    //     await axios.post(
-    //         'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
-    //         {
-    //           user_id: localStorage.getItem('user_id'),
+    //     await axios({
+    //       method: 'post',
+    //       url: 'https://bubble-tea-cafe-api-production.up.railway.app/api/auth/add-to-cart',
+    //       data: {
     //           menu_id: selectedMenu.Id,
     //           quantity: quantity,
     //           topping: selectedToppings,
-    //           comment: comment,
-    //         }
-    //       )
-    //       .then((response) => {
-    //         localStorage.setItem('cart', response.data);
-    //         window.location.href = '/';
-    //       });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    //           comment: comment},
+    //           headers: {Authorization: token}
+    //       }
+    //     )
+    //         window.location.href = '/product';
     // };
+
 
   useEffect(() => {
     fetchProduct();
@@ -205,10 +228,11 @@ export default function ProductPage() {
                   />
 
 
+                  {/* <button className='btn-cart' type='submit' value='Submit'
+                  onClick={(e) => handleSubmit(e)}> */}
                   <button className='btn-cart' onClick={handleSubmit}>
                     Add to Cart
                   </button>
-
 
 
                   <button 
