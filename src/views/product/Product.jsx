@@ -136,7 +136,8 @@ export default function ProductPage() {
                           <ul>
                             {selectedToppings.map((selectedTopping) => (
                               <li key={selectedTopping.Id}>
-                                {selectedTopping.name}
+                                ${selectedTopping.price} THB 
+                                 {selectedTopping.name}
                               </li>
                             ))}
                           </ul>

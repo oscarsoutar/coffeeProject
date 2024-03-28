@@ -21,6 +21,8 @@
 }
 
 .about_h1 {
+    background-color: black;
+    color: white;
     font-size: var(--big-font-size);
     padding-bottom: 16px;
 }
