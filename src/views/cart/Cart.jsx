@@ -208,7 +208,7 @@ export default function ViewCart() {
   }, []);
 
   return (
-    <div>
+    <div className="cartorderpage">
         <div className="cart">
             <h1>Cart</h1>
             <div className="table">
